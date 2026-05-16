@@ -1,176 +1,34 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flipper Store</title>
-
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #74ebd5, #9face6);
+    text-align: center;
+    margin: 0;
+    padding: 50px;
+  }
 
-body{
-background:#050816;
-color:white;
-overflow-x:hidden;
-}
+  h1 {
+    color: white;
+    font-size: 40px;
+  }
 
-header{
-display:flex;
-justify-content:space-between;
-align-items:center;
-padding:20px 50px;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(10px);
-position:sticky;
-top:0;
-z-index:1000;
-}
+  p {
+    color: white;
+    font-size: 18px;
+  }
 
-.logo{
-font-size:28px;
-font-weight:bold;
-color:#00bfff;
-}
+  button {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    background: white;
+    color: #333;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 20px;
+  }
 
-nav a{
-color:white;
-text-decoration:none;
-margin-left:25px;
-transition:0.3s;
-}
-
-nav a:hover{
-color:#00bfff;
-}
-
-.hero{
-height:90vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
-background:linear-gradient(to bottom,#050816,#0a1f44);
-}
-
-.hero h1{
-font-size:60px;
-margin-bottom:20px;
-text-shadow:0 0 20px #00bfff;
-}
-
-.hero p{
-max-width:700px;
-font-size:20px;
-opacity:0.8;
-margin-bottom:30px;
-}
-
-.btn{
-padding:15px 35px;
-background:#00bfff;
-color:black;
-border:none;
-border-radius:10px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-text-decoration:none;
-}
-
-.btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px #00bfff;
-}
-
-.products{
-padding:80px 40px;
-}
-
-.products h2{
-text-align:center;
-font-size:40px;
-margin-bottom:50px;
-}
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
-}
-
-.card{
-background:#0d1328;
-padding:25px;
-border-radius:20px;
-transition:0.3s;
-border:1px solid rgba(255,255,255,0.1);
-}
-
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px rgba(0,191,255,0.4);
-}
-
-.card img{
-width:100%;
-border-radius:15px;
-margin-bottom:20px;
-}
-
-.card h3{
-margin-bottom:10px;
-color:#00bfff;
-}
-
-footer{
-text-align:center;
-padding:30px;
-background:#02040d;
-margin-top:50px;
-opacity:0.7;
-}
+  button:hover {
+    background: #eee;
+  }
 </style>
-</head>
-
-<body>
-
-<header>
-<div class="logo">Flipper Store</div>
-
-<nav>
-<a href="#">Home</a>
-<a href="#">Products</a>
-<a href="#">About</a>
-<a href="#">Contact</a>
-</nav>
-</header>
-
-<section class="hero">
-<h1>Next Generation Tech Store</h1>
-
-<p>
-Gaming consoles, handheld devices, cybersecurity tools,
-and advanced tech gear all in one place.
-</p>
-
-<a href="#" class="btn">Shop Now</a>
-</section>
-
-<section class="products">
-
-<h2>Featured Products</h2>
-
-<div class="grid">
-
-<div class="card">
-<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" alt="">
-<h3>Gaming Handhelds</h3>
-<p>
