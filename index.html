@@ -3,197 +3,255 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Flipper Store</title>
+<title>Shopify Style Store</title>
 
 <style>
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:Arial, sans-serif;
-}
-
 body{
-background:#050816;
+margin:0;
+font-family:Arial;
+background:#0b0f19;
 color:white;
-overflow-x:hidden;
 }
 
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:20px 50px;
-background:rgba(0,0,0,0.4);
-backdrop-filter:blur(10px);
+padding:15px 25px;
+background:#0a0d16;
 position:sticky;
 top:0;
-z-index:1000;
+border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .logo{
-font-size:28px;
+color:#00bfff;
 font-weight:bold;
-color:#00bfff;
 }
 
-nav a{
+nav button{
+background:none;
+border:none;
 color:white;
-text-decoration:none;
-margin-left:25px;
-transition:0.3s;
-}
-
-nav a:hover{
-color:#00bfff;
+margin-left:10px;
+cursor:pointer;
 }
 
 .hero{
-height:90vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
 text-align:center;
-padding:20px;
-background:linear-gradient(to bottom,#050816,#0a1f44);
-}
-
-.hero h1{
-font-size:60px;
-margin-bottom:20px;
-text-shadow:0 0 20px #00bfff;
-}
-
-.hero p{
-max-width:700px;
-font-size:20px;
-opacity:0.8;
-margin-bottom:30px;
-}
-
-.btn{
-padding:15px 35px;
-background:#00bfff;
-color:black;
-border:none;
-border-radius:10px;
-font-size:18px;
-font-weight:bold;
-cursor:pointer;
-transition:0.3s;
-text-decoration:none;
-}
-
-.btn:hover{
-transform:scale(1.05);
-box-shadow:0 0 20px #00bfff;
-}
-
-.products{
-padding:80px 40px;
-}
-
-.products h2{
-text-align:center;
-font-size:40px;
-margin-bottom:50px;
+padding:40px 20px;
+background:linear-gradient(#0b0f19,#101a33);
 }
 
 .grid{
 display:grid;
-grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
-gap:30px;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:20px;
+padding:25px;
 }
 
 .card{
-background:#0d1328;
-padding:25px;
-border-radius:20px;
-transition:0.3s;
+background:#121a2b;
+padding:15px;
+border-radius:12px;
+border:1px solid rgba(255,255,255,0.08);
+}
+
+.price{
+color:#00ffb3;
+font-weight:bold;
+margin:8px 0;
+}
+
+button{
+width:100%;
+padding:8px;
+border:none;
+border-radius:6px;
+cursor:pointer;
+margin-top:5px;
+}
+
+.add{background:#00bfff;}
+.remove{background:#ff4d4d;}
+.paypal{background:#ffcc00;}
+.square{background:#00ff88;color:black;}
+
+.cart{
+position:fixed;
+right:10px;
+bottom:10px;
+width:320px;
+background:#0f1526;
+padding:12px;
+border-radius:12px;
+max-height:75vh;
+overflow:auto;
 border:1px solid rgba(255,255,255,0.1);
 }
 
-.card:hover{
-transform:translateY(-10px);
-box-shadow:0 0 25px rgba(0,191,255,0.4);
+.total{
+color:#00ffb3;
+margin-top:10px;
+font-weight:bold;
 }
 
-.card img{
+.admin{
+display:none;
+padding:20px;
+background:#111a33;
+margin:20px;
+border-radius:10px;
+}
+
+input{
 width:100%;
-border-radius:15px;
-margin-bottom:20px;
+padding:8px;
+margin:5px 0;
+border-radius:6px;
+border:none;
 }
 
-.card h3{
-margin-bottom:10px;
-color:#00bfff;
-}
-
-footer{
-text-align:center;
-padding:30px;
-background:#02040d;
-margin-top:50px;
-opacity:0.7;
-}
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">Flipper Store</div>
+<div class="logo">Shopify Style Store</div>
 
 <nav>
-<a href="#">Home</a>
-<a href="#">Products</a>
-<a href="#">About</a>
-<a href="#">Contact</a>
+<button onclick="toggleCart()">Cart</button>
+<button onclick="toggleAdmin()">Admin</button>
 </nav>
 </header>
 
 <section class="hero">
-<h1>Next Generation Tech Store</h1>
-
-<p>
-Gaming consoles, handheld devices, cybersecurity tools,
-and advanced tech gear all in one place.
-</p>
-
-<a href="#" class="btn">Shop Now</a>
+<h1>My Tech Store</h1>
+<p>Simple Shopify-style storefront</p>
 </section>
 
-<section class="products">
+<section class="grid" id="grid"></section>
 
-<h2>Featured Products</h2>
+<div class="cart" id="cartBox">
+<h3>Cart</h3>
+<div id="cart"></div>
+<div class="total" id="total"></div>
+</div>
 
-<div class="grid">
+<!-- ADMIN PANEL -->
+<div class="admin" id="adminBox">
+<h3>Add Product</h3>
+<input id="name" placeholder="Product name">
+<input id="price" placeholder="Price">
+<button onclick="addProduct()">Add Product</button>
+</div>
 
+<script>
+
+const PAYPAL_EMAIL = "YOUR_PAYPAL_EMAIL_HERE";
+
+let products = JSON.parse(localStorage.getItem("products")) || [
+{name:"Flipper Zero",price:280},
+{name:"HackRF",price:470},
+{name:"PortaPack",price:620},
+{name:"Rubber Ducky",price:80},
+{name:"WiFi Pineapple",price:250}
+];
+
+let cart = JSON.parse(localStorage.getItem("cart")) || [];
+
+function save(){
+localStorage.setItem("products",JSON.stringify(products));
+localStorage.setItem("cart",JSON.stringify(cart));
+}
+
+/* PRODUCTS */
+function render(){
+document.getElementById("grid").innerHTML =
+products.map((p,i)=>`
 <div class="card">
-<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop" alt="">
-<h3>Gaming Handhelds</h3>
-<p>Portable gaming consoles and accessories.</p>
-</div>
+<h3>${p.name}</h3>
+<div class="price">${p.price} AUD</div>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=1200&auto=format&fit=crop" alt="">
-<h3>Console Mods</h3>
-<p>PS5 accessories, upgrades, and tools.</p>
-</div>
+<button class="add" onclick="add(${i})">Add to Cart</button>
 
-<div class="card">
-<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop" alt="">
-<h3>Cyber Devices</h3>
-<p>Educational and security testing hardware.</p>
-</div>
+<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
+<input type="hidden" name="cmd" value="_xclick">
+<input type="hidden" name="business" value="${PAYPAL_EMAIL}">
+<input type="hidden" name="item_name" value="${p.name}">
+<input type="hidden" name="amount" value="${p.price}">
+<input type="hidden" name="currency_code" value="AUD">
+<button class="paypal">PayPal</button>
+</form>
+
+<a href="https://squareup.com" target="_blank">
+<button class="square">Square</button>
+</a>
 
 </div>
-</section>
+`).join("");
+}
 
-<footer>
-© 2026 Flipper Store - All Rights Reserved
-</footer>
+/* CART */
+function add(i){
+let item = products[i];
+let found = cart.find(c=>c.name===item.name);
+if(found) found.qty++;
+else cart.push({...item,qty:1});
+save();
+renderCart();
+}
+
+function renderCart(){
+let total=0;
+
+document.getElementById("cart").innerHTML =
+cart.map((c,i)=>{
+total += c.price*c.qty;
+return `
+<div>
+<b>${c.name}</b> x${c.qty}
+<button class="remove" onclick="removeItem(${i})">X</button>
+</div>
+`;
+}).join("");
+
+document.getElementById("total").innerText="Total: "+total+" AUD";
+}
+
+function removeItem(i){
+cart.splice(i,1);
+save();
+renderCart();
+}
+
+/* CART TOGGLE */
+function toggleCart(){
+let box=document.getElementById("cartBox");
+box.style.display = box.style.display==="block"?"none":"block";
+}
+
+/* ADMIN */
+function toggleAdmin(){
+let box=document.getElementById("adminBox");
+box.style.display = box.style.display==="block"?"none":"block";
+}
+
+function addProduct(){
+let n=document.getElementById("name").value;
+let p=Number(document.getElementById("price").value);
+
+products.push({name:n,price:p});
+save();
+render();
+alert("Product added!");
+}
+
+render();
+renderCart();
+
+</script>
 
 </body>
 </html>
