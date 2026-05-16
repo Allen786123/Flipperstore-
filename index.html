@@ -8,111 +8,95 @@
 <style>
 body{
 margin:0;
-font-family:Arial;
-background:#0b0f19;
-color:white;
+font-family:Arial,sans-serif;
+background:#f5f5f5;
+color:#111;
 }
 
-/* HEADER */
 header{
+background:white;
+padding:15px 30px;
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:15px 30px;
-background:#0a0d16;
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
 position:sticky;
 top:0;
-z-index:1000;
-border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .logo{
-font-size:20px;
+font-size:22px;
 font-weight:bold;
-color:#00bfff;
 }
 
-/* HERO */
+nav a{
+margin-left:20px;
+text-decoration:none;
+color:#111;
+}
+
 .hero{
 text-align:center;
-padding:40px 20px;
-background:linear-gradient(#0b0f19,#101a33);
+padding:60px 20px;
+background:white;
 }
 
 .hero h1{
-font-size:34px;
-color:#00bfff;
+font-size:42px;
+margin-bottom:10px;
 }
 
-/* PRODUCTS GRID */
-.grid{
+.hero p{
+color:#666;
+}
+
+.products{
+padding:40px 20px;
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
 gap:20px;
-padding:25px;
 }
 
-/* PRODUCT CARD */
 .card{
-background:#121a2b;
-border-radius:14px;
+background:white;
+border-radius:12px;
 overflow:hidden;
-border:1px solid rgba(255,255,255,0.08);
-transition:0.3s;
-}
-
-.card:hover{
-transform:translateY(-6px);
+box-shadow:0 2px 10px rgba(0,0,0,0.08);
 }
 
 .card img{
 width:100%;
-height:160px;
+height:180px;
 object-fit:cover;
 }
 
-.content{
-padding:12px;
+.card-content{
+padding:15px;
+}
+
+.card h3{
+margin:0 0 10px;
 }
 
 .price{
-color:#00ffb3;
 font-weight:bold;
-margin:8px 0;
+margin-bottom:10px;
 }
 
-/* BUTTONS */
 button{
 width:100%;
-padding:8px;
+padding:10px;
 border:none;
+background:black;
+color:white;
 border-radius:6px;
 cursor:pointer;
-margin-top:5px;
 }
 
-.add{background:#00bfff;}
-.paypal{background:#ffcc00;}
-.square{background:#00ff88;color:black;}
-
-/* CART */
-.cart{
-position:fixed;
-right:10px;
-bottom:10px;
-width:320px;
-background:#0f1526;
-padding:12px;
-border-radius:12px;
-max-height:70vh;
-overflow:auto;
-border:1px solid rgba(255,255,255,0.1);
-}
-
-.total{
-color:#00ffb3;
-font-weight:bold;
-margin-top:10px;
+footer{
+text-align:center;
+padding:20px;
+color:#666;
 }
 </style>
 </head>
@@ -121,108 +105,56 @@ margin-top:10px;
 
 <header>
 <div class="logo">Flipper Store</div>
+
+<nav>
+<a href="#">Home</a>
+<a href="#">Products</a>
+<a href="#">Contact</a>
+</nav>
 </header>
 
 <section class="hero">
-<h1>Premium Tech Store</h1>
-<p>Modern Shopify-style layout with real product cards</p>
+<h1>Simple Tech Store</h1>
+<p>Gaming and tech products in one place.</p>
 </section>
 
-<section class="grid" id="grid"></section>
+<section class="products">
 
-<div class="cart">
-<h3>Cart</h3>
-<div id="cart"></div>
-<div class="total" id="total">Total: 0 AUD</div>
-</div>
-
-<script>
-
-const PAYPAL_EMAIL="YOUR_PAYPAL_EMAIL_HERE";
-
-/* PRODUCTS WITH IMAGES */
-const products=[
-{
-name:"Flipper Zero",
-price:280,
-img:"https://m.media-amazon.com/images/I/61cX7K5Y9wL._AC_SL1500_.jpg"
-},
-{
-name:"HackRF One",
-price:470,
-img:"https://upload.wikimedia.org/wikipedia/commons/3/3a/HackRF_One.jpg"
-},
-{
-name:"PortaPack",
-price:620,
-img:"https://i.imgur.com/3QZQZ8l.jpg"
-},
-{
-name:"Rubber Ducky",
-price:80,
-img:"https://upload.wikimedia.org/wikipedia/commons/0/0b/USB_Rubber_Ducky.jpg"
-},
-{
-name:"WiFi Pineapple",
-price:250,
-img:"https://hak5.org/cdn/shop/products/wifi-pineapple.jpg"
-}
-];
-
-let cart=[];
-
-/* RENDER PRODUCTS */
-function render(){
-document.getElementById("grid").innerHTML =
-products.map((p,i)=>`
 <div class="card">
-<img src="${p.img}">
-<div class="content">
-<h3>${p.name}</h3>
-<div class="price">${p.price} AUD</div>
+<img src="https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=1200&auto=format&fit=crop">
 
-<button class="add" onclick="add(${i})">Add to Cart</button>
-
-<form action="https://www.paypal.com/cgi-bin/webscr" method="post">
-<input type="hidden" name="cmd" value="_xclick">
-<input type="hidden" name="business" value="${PAYPAL_EMAIL}">
-<input type="hidden" name="item_name" value="${p.name}">
-<input type="hidden" name="amount" value="${p.price}">
-<input type="hidden" name="currency_code" value="AUD">
-<button class="paypal">Buy with PayPal</button>
-</form>
-
-<a href="https://squareup.com" target="_blank">
-<button class="square">Buy with Square</button>
-</a>
-
+<div class="card-content">
+<h3>Flipper Zero</h3>
+<div class="price">280 AUD</div>
+<button>Buy Now</button>
 </div>
 </div>
-`).join("");
-}
 
-/* CART */
-function add(i){
-cart.push(products[i]);
-renderCart();
-}
+<div class="card">
+<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?q=80&w=1200&auto=format&fit=crop">
 
-function renderCart(){
-let total=0;
+<div class="card-content">
+<h3>HackRF One</h3>
+<div class="price">470 AUD</div>
+<button>Buy Now</button>
+</div>
+</div>
 
-document.getElementById("cart").innerHTML =
-cart.map(c=>{
-total+=c.price;
-return `<div>${c.name} - ${c.price} AUD</div>`;
-}).join("");
+<div class="card">
+<img src="https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=1200&auto=format&fit=crop">
 
-document.getElementById("total").innerText="Total: "+total+" AUD";
-}
+<div class="card-content">
+<h3>Steam Deck</h3>
+<div class="price">950 AUD</div>
+<button>Buy Now</button>
+</div>
+</div>
 
-render();
-renderCart();
+</section>
 
-</script>
+<footer>
+© 2026 Flipper Store
+</footer>
 
 </body>
 </html>
