@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Shopify Style Store</title>
+<title>Flipper Store</title>
 
 <style>
 body{
@@ -13,36 +13,38 @@ background:#0b0f19;
 color:white;
 }
 
+/* HEADER */
 header{
 display:flex;
 justify-content:space-between;
 align-items:center;
-padding:15px 25px;
+padding:15px 30px;
 background:#0a0d16;
 position:sticky;
 top:0;
+z-index:1000;
 border-bottom:1px solid rgba(255,255,255,0.05);
 }
 
 .logo{
-color:#00bfff;
+font-size:20px;
 font-weight:bold;
+color:#00bfff;
 }
 
-nav button{
-background:none;
-border:none;
-color:white;
-margin-left:10px;
-cursor:pointer;
-}
-
+/* HERO */
 .hero{
 text-align:center;
 padding:40px 20px;
 background:linear-gradient(#0b0f19,#101a33);
 }
 
+.hero h1{
+font-size:34px;
+color:#00bfff;
+}
+
+/* PRODUCTS GRID */
 .grid{
 display:grid;
 grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
@@ -50,11 +52,27 @@ gap:20px;
 padding:25px;
 }
 
+/* PRODUCT CARD */
 .card{
 background:#121a2b;
-padding:15px;
-border-radius:12px;
+border-radius:14px;
+overflow:hidden;
 border:1px solid rgba(255,255,255,0.08);
+transition:0.3s;
+}
+
+.card:hover{
+transform:translateY(-6px);
+}
+
+.card img{
+width:100%;
+height:160px;
+object-fit:cover;
+}
+
+.content{
+padding:12px;
 }
 
 .price{
@@ -63,6 +81,7 @@ font-weight:bold;
 margin:8px 0;
 }
 
+/* BUTTONS */
 button{
 width:100%;
 padding:8px;
@@ -73,10 +92,10 @@ margin-top:5px;
 }
 
 .add{background:#00bfff;}
-.remove{background:#ff4d4d;}
 .paypal{background:#ffcc00;}
 .square{background:#00ff88;color:black;}
 
+/* CART */
 .cart{
 position:fixed;
 right:10px;
@@ -85,92 +104,80 @@ width:320px;
 background:#0f1526;
 padding:12px;
 border-radius:12px;
-max-height:75vh;
+max-height:70vh;
 overflow:auto;
 border:1px solid rgba(255,255,255,0.1);
 }
 
 .total{
 color:#00ffb3;
-margin-top:10px;
 font-weight:bold;
+margin-top:10px;
 }
-
-.admin{
-display:none;
-padding:20px;
-background:#111a33;
-margin:20px;
-border-radius:10px;
-}
-
-input{
-width:100%;
-padding:8px;
-margin:5px 0;
-border-radius:6px;
-border:none;
-}
-
 </style>
 </head>
 
 <body>
 
 <header>
-<div class="logo">Shopify Style Store</div>
-
-<nav>
-<button onclick="toggleCart()">Cart</button>
-<button onclick="toggleAdmin()">Admin</button>
-</nav>
+<div class="logo">Flipper Store</div>
 </header>
 
 <section class="hero">
-<h1>My Tech Store</h1>
-<p>Simple Shopify-style storefront</p>
+<h1>Premium Tech Store</h1>
+<p>Modern Shopify-style layout with real product cards</p>
 </section>
 
 <section class="grid" id="grid"></section>
 
-<div class="cart" id="cartBox">
+<div class="cart">
 <h3>Cart</h3>
 <div id="cart"></div>
-<div class="total" id="total"></div>
-</div>
-
-<!-- ADMIN PANEL -->
-<div class="admin" id="adminBox">
-<h3>Add Product</h3>
-<input id="name" placeholder="Product name">
-<input id="price" placeholder="Price">
-<button onclick="addProduct()">Add Product</button>
+<div class="total" id="total">Total: 0 AUD</div>
 </div>
 
 <script>
 
-const PAYPAL_EMAIL = "YOUR_PAYPAL_EMAIL_HERE";
+const PAYPAL_EMAIL="YOUR_PAYPAL_EMAIL_HERE";
 
-let products = JSON.parse(localStorage.getItem("products")) || [
-{name:"Flipper Zero",price:280},
-{name:"HackRF",price:470},
-{name:"PortaPack",price:620},
-{name:"Rubber Ducky",price:80},
-{name:"WiFi Pineapple",price:250}
+/* PRODUCTS WITH IMAGES */
+const products=[
+{
+name:"Flipper Zero",
+price:280,
+img:"https://m.media-amazon.com/images/I/61cX7K5Y9wL._AC_SL1500_.jpg"
+},
+{
+name:"HackRF One",
+price:470,
+img:"https://upload.wikimedia.org/wikipedia/commons/3/3a/HackRF_One.jpg"
+},
+{
+name:"PortaPack",
+price:620,
+img:"https://i.imgur.com/3QZQZ8l.jpg"
+},
+{
+name:"Rubber Ducky",
+price:80,
+img:"https://upload.wikimedia.org/wikipedia/commons/0/0b/USB_Rubber_Ducky.jpg"
+},
+{
+name:"WiFi Pineapple",
+price:250,
+img:"https://hak5.org/cdn/shop/products/wifi-pineapple.jpg"
+}
 ];
 
-let cart = JSON.parse(localStorage.getItem("cart")) || [];
+let cart=[];
 
-function save(){
-localStorage.setItem("products",JSON.stringify(products));
-localStorage.setItem("cart",JSON.stringify(cart));
-}
-
-/* PRODUCTS */
+/* RENDER PRODUCTS */
 function render(){
 document.getElementById("grid").innerHTML =
 products.map((p,i)=>`
 <div class="card">
+<img src="${p.img}">
+<div class="content">
 <h3>${p.name}</h3>
 <div class="price">${p.price} AUD</div>
 
@@ -182,24 +189,21 @@ products.map((p,i)=>`
 <input type="hidden" name="item_name" value="${p.name}">
 <input type="hidden" name="amount" value="${p.price}">
 <input type="hidden" name="currency_code" value="AUD">
-<button class="paypal">PayPal</button>
+<button class="paypal">Buy with PayPal</button>
 </form>
 
 <a href="https://squareup.com" target="_blank">
-<button class="square">Square</button>
+<button class="square">Buy with Square</button>
 </a>
 
+</div>
 </div>
 `).join("");
 }
 
 /* CART */
 function add(i){
-let item = products[i];
-let found = cart.find(c=>c.name===item.name);
-if(found) found.qty++;
-else cart.push({...item,qty:1});
-save();
+cart.push(products[i]);
 renderCart();
 }
 
@@ -207,45 +211,12 @@ function renderCart(){
 let total=0;
 
 document.getElementById("cart").innerHTML =
-cart.map((c,i)=>{
-total += c.price*c.qty;
-return `
-<div>
-<b>${c.name}</b> x${c.qty}
-<button class="remove" onclick="removeItem(${i})">X</button>
-</div>
-`;
+cart.map(c=>{
+total+=c.price;
+return `<div>${c.name} - ${c.price} AUD</div>`;
 }).join("");
 
 document.getElementById("total").innerText="Total: "+total+" AUD";
-}
-
-function removeItem(i){
-cart.splice(i,1);
-save();
-renderCart();
-}
-
-/* CART TOGGLE */
-function toggleCart(){
-let box=document.getElementById("cartBox");
-box.style.display = box.style.display==="block"?"none":"block";
-}
-
-/* ADMIN */
-function toggleAdmin(){
-let box=document.getElementById("adminBox");
-box.style.display = box.style.display==="block"?"none":"block";
-}
-
-function addProduct(){
-let n=document.getElementById("name").value;
-let p=Number(document.getElementById("price").value);
-
-products.push({name:n,price:p});
-save();
-render();
-alert("Product added!");
 }
 
 render();
